@@ -18,7 +18,11 @@ export default function Dashboard() {
   }, [user]);
 
   const fetchArticles = async () => {
-    const res = await fetch(`/api/articles?search=${searchTerm}&tag=${selectedTag}`);
+    const res = await fetch(`/api/articles?search=${searchTerm}&tag=${selectedTag}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
     if (res.ok) {
       const data = await res.json();
       setArticles(data);
@@ -26,14 +30,23 @@ export default function Dashboard() {
   };
 
   const handleDelete = async (id: string) => {
-    const res = await fetch(`/api/articles/${id}`, { method: 'DELETE' });
+    const res = await fetch(`/api/articles/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+     });
     if (res.ok) {
       setArticles(articles.filter((article: any) => article.id !== id));
     }
   };
 
   const handleSummarize = async (id: string) => {
-    const res = await fetch(`/api/summary/${id}`);
+    const res = await fetch(`/api/summary/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
     if (res.ok) {
       const data = await res.json();
       alert(data.summary);

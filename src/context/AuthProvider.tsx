@@ -15,15 +15,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch('/api/auth/session');
+        const res = await fetch('/api/auth/session', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
+          setToken(data.token);
         }
       } catch (error) {
         console.error('Session check failed:', error);
@@ -40,6 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     if (res.ok) {
       const data = await res.json();
+      console.log(data)
       setUser(data.user);
       localStorage.setItem('token', data.token);
       router.push('/dashboard');

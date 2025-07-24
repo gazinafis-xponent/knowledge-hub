@@ -4,6 +4,7 @@ import  prisma  from './prisma';
 
 export async function getUserFromToken(request: Request) {
   const token = request.headers.get('Authorization')?.replace('Bearer ', '');
+  console.log(token)
   if (!token) {
     return null;
   }
