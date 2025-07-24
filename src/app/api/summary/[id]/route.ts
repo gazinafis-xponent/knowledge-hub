@@ -25,12 +25,12 @@ export async function GET(
     console.log('No user found'); // Debug
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  console.log('User:', user); // Debug
+  // console.log('User:', user); // Debug
 
   const article = await prisma.article.findFirst({
     where: { id, userId: user.id },
   });
-  console.log('Article:', article); // Debug
+  // console.log('Article:', article); // Debug
 
   if (!article) {
     return NextResponse.json({ error: 'Article not found' }, { status: 404 });
@@ -48,7 +48,7 @@ export async function GET(
       console.log('No summary generated'); // Debug
       return NextResponse.json({ error: 'No summary generated' }, { status: 502 });
     }
-    console.log('Summary:', summary); // Debug
+    // console.log('Summary:', summary); // Debug
     return NextResponse.json({ summary });
   } catch (error: any) {
     console.error('Gemini error:', error.message); // Debug

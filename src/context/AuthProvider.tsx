@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     if (res.ok) {
       const data = await res.json();
-      console.log(data)
+      // console.log(data)
       setUser(data.user);
       localStorage.setItem('token', data.token);
       router.push('/dashboard');

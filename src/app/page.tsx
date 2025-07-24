@@ -1,5 +1,5 @@
 
-import Navbar from '@/components/Nabar';
+import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 
 
