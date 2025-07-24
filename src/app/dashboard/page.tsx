@@ -8,80 +8,109 @@ import Navbar from "@/components/Navbar";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { Article } from "@/@types/types";
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
   const [summaryLoading, setSummaryLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
-  const token = localStorage.getItem("token");
+
+  // Ensure code runs only on client
   useEffect(() => {
-    if (user) {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (user && isClient) {
       fetchArticles();
     }
-  }, [user, searchTerm, selectedTag]); // Added dependencies for real-time updates
+  }, [user, searchTerm, selectedTag, isClient]);
 
   const fetchArticles = async () => {
-    const res = await fetch(
-      `/api/articles?search=${searchTerm}&tag=${selectedTag}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+    try {
+      const res = await fetch(
+        `/api/articles?search=${encodeURIComponent(searchTerm)}&tag=${encodeURIComponent(selectedTag)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setArticles(data);
+      } else {
+        console.error("Failed to fetch articles:", res.status);
+        toast.error("Failed to fetch articles");
       }
-    );
-    if (res.ok) {
-      const data = await res.json();
-      setArticles(data);
-    } else {
-      console.error("Failed to fetch articles:", res.status);
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+      toast.error("Error fetching articles");
     }
   };
 
   const handleDelete = async (id: string) => {
-    const res = await fetch(`/api/articles/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    if (res.ok) {
-      setArticles(articles.filter((article: any) => article.id !== id));
-      toast.success("Article deleted successfully!");
-    } else {
-      console.error("Failed to delete article:", res.status);
+    try {
+      const res = await fetch(`/api/articles/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (res.ok) {
+        setArticles(articles.filter((article: Article) => article.id !== id));
+        toast.success("Article deleted successfully!");
+      } else {
+        console.error("Failed to delete article:", res.status);
+        toast.error("Failed to delete article");
+      }
+    } catch (error) {
+      console.error("Error deleting article:", error);
+      toast.error("Error deleting article");
     }
   };
 
   const handleSummarize = async (id: string) => {
     setSummaryLoading(true);
-    const res = await fetch(`/api/summary/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    if (res.ok) {
-      const data = await res.json();
-      toast.success("Summary created successfully!"); // Consider replacing with a modal for better UX
-      Swal.fire({
-        title: "Summary",
-        text: data.summary,
-        icon: "success",
-        confirmButtonText: "OK",
+    try {
+      const res = await fetch(`/api/summary/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-    } else {
-      console.error("Failed to summarize article:", res.status);
-      toast.error("Failed to create summary");
+      if (res.ok) {
+        const data = await res.json();
+        toast.success("Summary created successfully!");
+        Swal.fire({
+          title: "Summary",
+          text: data.summary,
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } else {
+        console.error("Failed to summarize article:", res.status);
+        toast.error("Failed to create summary");
+      }
+    } catch (error) {
+      console.error("Error summarizing article:", error);
+      toast.error("Error creating summary");
     }
     setSummaryLoading(false);
   };
 
-    if (!token) {
-    return router.push("/auth/login");
-  }
-  if (!user) {
+  // Handle redirect on client-side only
+  useEffect(() => {
+    if (isClient && !user && !localStorage.getItem("token")) {
+      router.push("/auth/login");
+    }
+  }, [user, isClient, router]);
+
+  // Show loading spinner until client-side rendering
+  if (!isClient || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <svg
@@ -107,6 +136,7 @@ export default function Dashboard() {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
       <Navbar />
@@ -146,7 +176,7 @@ export default function Dashboard() {
               className="p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder:text-gray-600"
             >
               <option value="">All Tags</option>
-              {[...new Set(articles.flatMap((a: any) => a.tags))].map((tag) => (
+              {[...new Set(articles.flatMap((a: Article) => a.tags))].map((tag) => (
                 <option key={tag} value={tag}>
                   {tag}
                 </option>

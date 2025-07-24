@@ -22,6 +22,7 @@ export default function Signup() {
       await signup(email, password);
       router.push('/dashboard');
     } catch (err) {
+      console.error('Signup error:', (err as Error).message); // Debug
       setError('Signup failed. Email may already be in use.');
     } finally {
       setLoading(false);

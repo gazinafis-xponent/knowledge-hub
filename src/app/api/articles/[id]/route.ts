@@ -63,8 +63,8 @@ export async function DELETE(
     });
     console.log('Article deleted:', id); // Debug
     return NextResponse.json({ message: 'Article deleted successfully' });
-  } catch (error: any) {
-    console.error('Delete error:', error.message); // Debug
+  } catch (error: unknown) {
+    console.error('Delete error:', (error as Error).message); // Debug
     return NextResponse.json({ error: 'Failed to delete article' }, { status: 500 });
   }
 }

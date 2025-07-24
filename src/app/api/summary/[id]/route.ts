@@ -50,8 +50,8 @@ export async function GET(
     }
     // console.log('Summary:', summary); // Debug
     return NextResponse.json({ summary });
-  } catch (error: any) {
-    console.error('Gemini error:', error.message); // Debug
-    return NextResponse.json({ error: error.message || 'Failed to generate summary' }, { status: 500 });
+  } catch (error: unknown) {
+    console.error('Gemini error:', (error as Error).message); // Debug
+    return NextResponse.json({ error: (error as Error).message || 'Failed to generate summary' }, { status: 500 });
   }
 }

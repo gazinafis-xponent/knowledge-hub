@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
     return NextResponse.json({ user: { id: user.id, email: user.email }, token });
   } catch (error) {
+    console.error('Login error:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

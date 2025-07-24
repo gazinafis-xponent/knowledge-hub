@@ -21,6 +21,7 @@ export default function Login() {
       await login(email, password);
       router.push('/dashboard');
     } catch (err) {
+      console.error('Login error:', (err as Error).message); // Debug
       setError('Invalid email or password.');
     } finally {
       setLoading(false);
@@ -68,7 +69,7 @@ export default function Login() {
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href="/auth/signup" className="text-blue-600 hover:underline cursor-pointer">
             Sign up
           </Link>

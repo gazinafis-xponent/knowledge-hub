@@ -3,13 +3,7 @@
 
 import Link from 'next/link';
 import { FaRobot, FaTrash } from 'react-icons/fa';
-
-interface Article {
-  id: string;
-  title: string;
-  body: string;
-  tags: string[];
-}
+import { Article } from '@/@types/types';
 
 interface ArticleListProps {
   articles: Article[];

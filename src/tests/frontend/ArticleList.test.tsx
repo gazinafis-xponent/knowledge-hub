@@ -1,4 +1,3 @@
-
 import { GET, POST } from '@/app/api/articles/route';
 import prisma from '@/lib/prisma';
 import { NextRequest } from 'next/server';
@@ -16,6 +15,8 @@ jest.mock('@/lib/prisma', () => ({
 jest.mock('@/lib/auth', () => ({
   getUserFromToken: jest.fn(),
 }));
+
+const { getUserFromToken } = jest.requireMock('@/lib/auth');
 
 describe('Articles API', () => {
   beforeEach(() => {
@@ -36,7 +37,7 @@ describe('Articles API', () => {
       },
     ];
 
-    require('@/lib/auth').getUserFromToken.mockResolvedValue(mockUser);
+    (getUserFromToken as jest.Mock).mockResolvedValue(mockUser);
     jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockUser);
     jest.spyOn(prisma.article, 'findMany').mockResolvedValue(mockArticles);
 
@@ -65,7 +66,7 @@ describe('Articles API', () => {
       updatedAt: new Date(),
     };
 
-    require('@/lib/auth').getUserFromToken.mockResolvedValue(mockUser);
+    (getUserFromToken as jest.Mock).mockResolvedValue(mockUser);
     jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockUser);
     jest.spyOn(prisma.article, 'create').mockResolvedValue(mockArticle);
 

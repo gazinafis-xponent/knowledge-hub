@@ -99,6 +99,7 @@ export default function ArticleDetails() {
         toast.error(errorData.error || "Failed to summarize article");
       }
     } catch (error) {
+      console.error('Summarize error:', (error as Error).message); // Debug
       toast.error("An unexpected error occurred");
     } finally {
       setSummaryLoading(false);
