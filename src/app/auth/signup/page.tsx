@@ -10,16 +10,21 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { signup } = useAuth();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
+    setLoading(true);
     setError('');
     try {
       await signup(email, password);
       router.push('/dashboard');
     } catch (err) {
       setError('Signup failed. Email may already be in use.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,6 +62,7 @@ export default function Signup() {
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
             type="submit"
+            disabled={!email || !password || loading}
             className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition-colors"
           >
             Sign Up

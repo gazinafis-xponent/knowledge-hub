@@ -8,11 +8,13 @@ import Link from 'next/link';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     setError('');
     try {
@@ -20,6 +22,8 @@ export default function Login() {
       router.push('/dashboard');
     } catch (err) {
       setError('Invalid email or password.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,15 +60,16 @@ export default function Login() {
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
+            disabled={loading}
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition-colors"
+            className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
           >
             Log In
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{' '}
-          <Link href="/auth/signup" className="text-blue-600 hover:underline">
+          <Link href="/auth/signup" className="text-blue-600 hover:underline cursor-pointer">
             Sign up
           </Link>
         </p>

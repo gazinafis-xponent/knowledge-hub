@@ -177,7 +177,7 @@ export default function ArticleDetails() {
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={handleSummarize}
-              className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200"
+              className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
             >
               {summaryLoading ? (
                 <svg
@@ -213,7 +213,7 @@ export default function ArticleDetails() {
               className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-white transition-colors duration-200 ${
                 isDeleting
                   ? "bg-red-400 cursor-not-allowed"
-                  : "bg-red-600 hover:bg-red-700"
+                  : "bg-red-600 hover:bg-red-700 cursor-pointer"
               }`}
             >
               {isDeleting ? (
@@ -244,7 +244,7 @@ export default function ArticleDetails() {
             </button>
             <button
               onClick={() => router.push("/dashboard")}
-              className="flex items-center justify-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-200"
+              className="flex items-center justify-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
             >
               <FaArrowLeft />
               Back to Dashboard
