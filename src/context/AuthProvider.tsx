@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
@@ -17,7 +18,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Check for existing session
     const checkSession = async () => {
       try {
         const res = await fetch('/api/auth/session');
@@ -41,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (res.ok) {
       const data = await res.json();
       setUser(data.user);
+      localStorage.setItem('token', data.token);
       router.push('/dashboard');
     } else {
       throw new Error('Invalid credentials');
@@ -56,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (res.ok) {
       const data = await res.json();
       setUser(data.user);
+      localStorage.setItem('token', data.token);
       router.push('/dashboard');
     } else {
       throw new Error('Signup failed');
@@ -65,6 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     setUser(null);
+    localStorage.removeItem('token');
     router.push('/auth/login');
   };
 
