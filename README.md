@@ -23,7 +23,7 @@ Features
 
 User Authentication 🔐: Secure signup and login with JWT-based authentication.
 Article Management ✍️: Create, view, delete, and summarize articles with a modern UI.
-AI-Powered Summarization 🤖: Generate concise article summaries using Google Gemini (gemini-1.5-flash).
+AI-Powered Summarization 🤖: Generate concise article summaries using Google Gemini (gemini-2.5-flash).
 Search and Filter 🔍: Search articles by content or filter by tags for quick access.
 Responsive Design 📱: Sleek, mobile-friendly UI with TailwindCSS and smooth animations.
 Feedback System 🔔: User-friendly toast notifications for success and error states.
