@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import  prisma  from '@/lib/prisma';
 import  {getUserFromToken}  from '@/lib/auth';
 
-export async function GET(request: Request) {
+export async function GET(request:NextRequest) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get('search') || '';
   const tag = searchParams.get('tag') || '';
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   return NextResponse.json(articles);
 }
 
-export async function POST(request: Request) {
+export async function POST(request:NextRequest){
   const user = await getUserFromToken(request);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
